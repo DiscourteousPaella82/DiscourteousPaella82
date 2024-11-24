@@ -2,12 +2,11 @@ import pandas as pd
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import tensorflow as tf
+from tensorflow import keras
 import numpy as np
 
-import matplotlib as mpl
 
-
-#Mace Head Weather Station daily data from 1st October 2024 to 30th October 2024
+#Mace Head Weather Station daily data from 1st October 2024 to 31st October 2024, date not significant
 #model needs to predict maximum air temperature given features
 
 def main():
@@ -24,6 +23,31 @@ def main():
 
     weather_features = np.array(weather_features)
     weather_features
+
+    weather_model = tf.keras.Sequential([
+        layers.Dense(64, activation='relu'),
+        layers.Dense(1)
+    ])
+
+    weather_model.compile(loss=tf.keras.losses.MeanSquaredError(),
+                          optimizer=tf.keras.optimizers.Adam())
+
+    weather_model.fit(weather_features, weather_labels, epochs=10)
+
+    normalize = layers.Normalization()
+
+    normalize.adapt(weather_features)
+
+    norm_weather_model = tf.keras.Sequential([
+        normalize,
+        layers.Dense(64, activation='relu'),
+        layers.Dense(1)
+    ])
+
+    norm_weather_model.compile(loss=tf.keras.losses.MeanSquaredError(),
+                               optimizer=tf.keras.optimizers.Adam())
+
+    norm_weather_model.fit(weather_features, weather_labels, epochs=10)
 
 if __name__ == '__main__':
  main()
