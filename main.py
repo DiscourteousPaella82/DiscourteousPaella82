@@ -1,12 +1,12 @@
 import pandas as pd
 import os
+
+from numpy import ndarray
+
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 
 import tensorflow as tf
 from tensorflow.keras import layers
-
-
-
 import numpy as np
 
 
@@ -53,7 +53,13 @@ def main():
     norm_weather_model.compile(loss=tf.keras.losses.MeanSquaredError(),
                                optimizer=tf.keras.optimizers.Adam())
 
+    #sample weather data from 30th September 2024 (10.2,9.8,0.5,1007.8,11.8,19,300,25,1.4,2.2,34.3,34.3,32.1,1282)
+
     norm_weather_model.fit(weather_features, weather_labels, epochs=50)
+    sample_weather = np.array([[10.2,9.8,0.5,1007.8,11.8,19,300,25,1.4,2.2,34.3,34.3,32.1,1282]])
+
+    print(f"Feature predictions:\n{norm_weather_model.predict(weather_features)}")
+    print(f"Sample prediction:{norm_weather_model.predict(sample_weather)}")
 
 if __name__ == '__main__':
  main()
