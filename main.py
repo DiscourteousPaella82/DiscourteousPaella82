@@ -36,6 +36,7 @@ def main():
 
     normalize = layers.Normalization()
 
+    #normalized model
     normalize.adapt(weather_features)
 
     norm_weather_model = tf.keras.Sequential([
