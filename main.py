@@ -1,20 +1,25 @@
 import pandas as pd
 import os
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
+
 import tensorflow as tf
-from tensorflow import keras
+from tensorflow.keras import layers
+
+
+
 import numpy as np
 
 
 #Mace Head Weather Station daily data from 1st October 2024 to 31st October 2024, date not significant
 #model needs to predict maximum air temperature given features
+#14 features
 
 def main():
     weather_train = pd.read_csv("dly275.csv",
-     names=["Maximum Air Temperature", "Minimum  Air Temperature", "09utc Grass Minimum Temperature", "Mean 10cm soil temperature",
+     names=["Minimum  Air Temperature", "09utc Grass Minimum Temperature", "Mean 10cm soil temperature",
                "Mean CBL Pressure", "Mean Wind Speed", "Highest ten minute mean wind speed", "Wind Direction at max 10 min mean", "Highest Gust",
             "Potential Evapotranspiration", "Evaporation", "Soil Moisture Deficits(mm) well drained",
-            "Soil Moisture Deficits(mm) moderately drained", "Soil Moisture Deficits(mm) poorly drained", "Global Radiation"])
+            "Soil Moisture Deficits(mm) moderately drained", "Soil Moisture Deficits(mm) poorly drained", "Global Radiation", "Maximum Air Temperature"])
 
     weather_train.head()
 
@@ -32,7 +37,7 @@ def main():
     weather_model.compile(loss=tf.keras.losses.MeanSquaredError(),
                           optimizer=tf.keras.optimizers.Adam())
 
-    weather_model.fit(weather_features, weather_labels, epochs=10)
+    weather_model.fit(weather_features, weather_labels, epochs=50)
 
     normalize = layers.Normalization()
 
@@ -48,7 +53,7 @@ def main():
     norm_weather_model.compile(loss=tf.keras.losses.MeanSquaredError(),
                                optimizer=tf.keras.optimizers.Adam())
 
-    norm_weather_model.fit(weather_features, weather_labels, epochs=10)
+    norm_weather_model.fit(weather_features, weather_labels, epochs=50)
 
 if __name__ == '__main__':
  main()
