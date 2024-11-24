@@ -1,18 +1,18 @@
 import pandas as pd
 import os
-
-from numpy import ndarray
-
 os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
-
 import tensorflow as tf
 from tensorflow.keras import layers
 import numpy as np
 
 
-#Mace Head Weather Station daily data from 1st October 2024 to 31st October 2024, date not significant
-#model needs to predict maximum air temperature given features
-#14 features
+"""Using TensorFlow in attempt to make predictions of Maximum Air Temperature 
+
+Mace Head Weather Station daily data from 1st October 2024 to 31st October 2024, date not significant
+model attempts to predict maximum air temperature given the other features
+dataset from https://cli.fusio.net/cli/climate_data/webdata/dly275.csv
+date and index columns were removed from the dataset in use
+14 features"""
 
 def main():
     weather_train = pd.read_csv("dly275.csv",
@@ -24,14 +24,13 @@ def main():
     weather_train.head()
 
     weather_features = weather_train.copy()
-    weather_labels = weather_features.pop('Maximum Air Temperature')
+    weather_labels = weather_features.pop("Maximum Air Temperature")    #Removing 'Maximum Air Temperature' from the features data frame and pushing them to a label data frame
 
     weather_features = np.array(weather_features)
-    weather_features
 
     weather_model = tf.keras.Sequential([
         layers.Dense(64, activation='relu'),
-        layers.Dense(1)
+        layers.Dense(1) #1 output unit
     ])
 
     weather_model.compile(loss=tf.keras.losses.MeanSquaredError(),
