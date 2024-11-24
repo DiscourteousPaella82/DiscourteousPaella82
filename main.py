@@ -1,16 +1,27 @@
 import numpy as np
 import matplotlib as mpl
 
-def initialize(self, inputs: int, outputs: int):
+class Layer:
 
-    standard_deviation = np.sqrt(2.0/inputs)
-    weights = np.random.normal(loc=0.0, scale=standard_deviation, size=(inputs,outputs))
+    weights: np.ndarray
+    biases: np.ndarray
 
-    biases = np.zeros(outputs)
-    return self(weights,biases)
+    def initialize(self, inputs: int, outputs: int):
+
+        standard_deviation = np.sqrt(2.0/inputs)
+        weights = np.random.normal(loc=0.0, scale=standard_deviation, size=(inputs,outputs))
+
+        biases = np.zeros(outputs)
+        return self(weights,biases)
+
+class Network:
+
+    hidden1: Layer
+    hidden2: Layer
+    hidden3: Layer
+    output: Layer
 
 class InputData:
-
     features:np.ndarray
     labels:np.ndarray
     numFeatures:int
@@ -30,9 +41,12 @@ def relu(x: np.ndarray):
     return np.maximum(0, x) #sets any value less than 0 to 0
 
 def softmax(x:np.ndarray):
-    exponential_x = np.exp(x -np.max(x, axis = 1, keepdims=True))
+    exponential_x = np.exp(x - np.max(x, axis = 1, keepdims=True))
     return exponential_x / np.sum(exponential_x, axis = 1, keepdims=True)
 
+def predict(input: np.ndarray):
+    output = softmax(input)
+    return np.argmax(output, axis=1)
 
 def main():
     pass
